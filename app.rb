@@ -41,7 +41,7 @@ get ('/volunteers/new') do
 end
 
 post ('/projects') do
-  name = params[:project_name]
+  title = params[:project_title]
   volunteer = params[:volunteer]
   project = Project.new({:title => title, :id => nil})
   project.save()
