@@ -8,6 +8,7 @@ also_reload('lib/**/*.rb')
 require './config'
 
 DB = PG.connect(DB_PARAMS)
+# DB =PG.connect({:dbname => "volunteer_tracker"})
 
 get('/') do
   redirect to('/projects')
