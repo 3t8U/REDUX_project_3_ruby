@@ -1,0 +1,32 @@
+<h1>¡SEÅRÇH!</h1>
+
+<div class="projects_main">
+  <a href="/projects/new"><h3>Add a Project!</h3></a>
+  <a href="/volunteers"><h3>View Volunteers.</h3></a>
+</div>
+
+
+<h3>Current Projects:</h3>
+<% if @projects %>
+  <ul>
+    <% @projects.each do |project| %>
+      <li><a href="/projects/<%= project.id %>"><%= project.title %></a></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>There are currently no projects to display.</p>
+<% end %>
+
+
+<form action="/projects/search" method="post">
+  <div class="form-group">
+    <label for="name">Search Titles</label>
+    <input id="search" name="title" class="form-control" type="text">
+  </div>
+  <button type="submit" class="btn">Search</button>
+</form>
+
+<form class="" action="/purge" method="get">
+  <button type="submit" name="button">PURGE</button>
+</form>
+<p><a href="/projects">Return to project list</a></p>
