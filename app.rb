@@ -22,8 +22,22 @@ get('/purge') do
   redirect to('/projects')
 end
 
+# get('/projects') do
+#   @projects = Project.all()
+#   erb(:projects)
+# end
+
 get('/projects') do
-  @projects = Project.all()
+  if params["clear"]
+    @projects = Project.clear()
+  elsif params["search_input"]
+    @projects = Project.search(params["search_input"])
+  elsif params["sort_list"]
+    @projects = Project.sort()
+
+  else
+    @projects = Project.all
+  end
   erb(:projects)
 end
 
@@ -45,11 +59,19 @@ post ('/projects') do
   volunteer = params[:volunteer]
   project = Project.new({:title => title, :id => nil})
   project.save()
-  if volunteer != ''
-    project.add_volunteer(volunteer)
-  end
+
   redirect to('/projects')
-end
+  end
+
+
+
+# post('/projects') do         ####**********>>>>>
+#   title = params[:project_title]
+#   project = Project.new(:title => title, :id => nil)
+#   project.save()
+#   @projects = Project.all()
+#   erb(:projects)
+# end
 
 post ('/volunteers') do
   name = params[:volunteer_name]
@@ -58,10 +80,10 @@ post ('/volunteers') do
   redirect to('/volunteers')
 end
 
-# post('/projects/search') do
-#   name = params[:name]
-#   @query = "#{(name != '') ? ('Name: ' + name) : ? (((name != '') ? ', ' : '') ''}"
-#   @projects = Project.search({:name => name})
+# post('/projects/search') do   #######*******
+#   title = params[:title]
+#   @query = "#{(title != '') ? ('Name: ' + title) : ? (((title != '') ? ', ' : '') ''}"
+#   @projects = Project.search({:title => title})
 #   erb(:search)
 # end
 
@@ -86,8 +108,8 @@ get ('/volunteers/:id/edit') do
 end
 
 # patch ('/projects/:id') do
-#   @project = Project.find(params[:id].to_i())
-#   @project.update({:name => params[:name]})
+#   @project = Project.find(params[:id].to_i())    ##*********
+#   @project.update({:title => params[:title]})
 #   new_volunteer = params[:volunteer_name]
 #   if (new_volunteer != "")
 #     volunteer = Volunteer.new({
@@ -128,11 +150,31 @@ delete ('/volunteers/:id') do
   redirect to('/volunteers')
 end
 
-
-
-
-
-patch('/') do
+patch('/projects/:id') do
+@project  = Project.find(params[:id].to_i())
+@project.update(params)
+@projects = Project.all
+erb(:projects)
 end
-delete('/') do
+
+     post('/projects/:id/volunteers') do   ######******>
+  @project = Project.find(params[:id].to_i())
+  params[:project_id] = params[:id]
+  volunteer = Volunteer.new(params)
+  volunteer.save()
+  erb(:project)
 end
+
+# Edit a volunteer and then route back to the project view.
+        patch('/projects/:id/volunteers/:volunteer_id') do ######******>
+  @project = Project.find(params[:id].to_i())
+  volunteer = Volunteer.find(params[:volunteer_id].to_i())
+  volunteer.update(params[:name], @project.id)
+  erb(:project)
+end
+
+
+# patch('/') do
+# end
+# delete('/') do
+# end
