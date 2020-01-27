@@ -1,6 +1,6 @@
 class Project
-
-  attr_accessor :id, :title
+  attr_accessor :id
+  attr_accessor :title
 
   def initialize(attributes)
     @title = attributes.fetch(:title)
@@ -22,6 +22,8 @@ class Project
     DB.exec("UPDATE projects SET title = '#{@title}' WHERE id = #{@id};")
 
   end
+
+
   # def update(attributes)
   #     @title = (attributes.fetch(:title) && attributes.fetch(:title) != '') ?
   #       attributes.fetch(:title) :
@@ -88,5 +90,3 @@ class Project
   end
 
 end
-
-# reg ex = {paramter passed in}/(not case sensitive)

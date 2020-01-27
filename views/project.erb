@@ -2,19 +2,37 @@
 
 <h3>Title: <%= @project.title %></h3>
 <h3>Volunteers:</h3>
+
 <% volunteers = @project.volunteers %>
 <% if volunteers %>
-  <ul>
-    <% volunteers.each do |volunteer| %>
-      <li><a href="/volunteers/<%= volunteer.id %>"><h3><%= volunteer.title %></h3></a></li>
-    <% end %>
-  </ul>
+<ul>
+  <% volunteers.each do |volunteer| %>
+  <li><a href="/projects/<%= @project.id %>">/volunteers/<%= volunteer.id %><h3><%= volunteer.name %></h3></a></li>
+  <% end %>
+</ul>
 <% else %>
-  <p>We need <em>YOU</em> to volunteer!!!!!</p>
+<p>We need <em>YOU</em> to volunteer!!!!!</p>
 <% end %>
 
-
-<form action="/projects/<%= @project.id %>/edit" method="get">
-  <button type="submit" class="btn">Edit Project</button>
+<form action="/projects/<%= @project.id %>/volunteers" method="post">
+  <div class="form-group">
+    <label for="volunteer_name">Add a Volunteer to "<%= @project.title %>"</label>
+    <input id="volunteer_name" name="volunteer_name" class="form-control" type="text">
+  </div>
+  <button type="submit" class="btn">Add Volunteer</button>
 </form>
+<a href="/projects">Cancel</a>
+
+
+<p><a href="/projects/<%= @project.id %>/edit">Edit Project</a></p>
+
+
+
+
+
+
+
 <p><a href="/projects">Return to project list</a></p>
+<form class="" action="/purge" method="get">
+  <button type="submit" name="button">PURGE</button>
+</form>

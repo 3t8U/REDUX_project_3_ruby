@@ -8,13 +8,13 @@
 
 <h3>List of Volunteers:</h3>
 <% if @volunteers %>
-  <ul>
-    <% @volunteers.each do |volunteer| %>
-      <li><a href="/volunteers/<%= volunteer.id %>"><%= volunteer.name %></a></li>
-    <% end %>
-  </ul>
+<ul>
+  <% @volunteers.each do |volunteer| %>
+  <li><a href="/volunteers/<%= volunteer.id %>"><%= volunteer.name %></a></li>
+  <% end %>
+</ul>
 <% else %>
-  <p>There are currently no Volunteers to display.</p>
+<p>There are currently no Volunteers to display.</p>
 <% end %>
 
 

@@ -1,28 +1,24 @@
 <h1>¡PRØJEÇTS!</h1>
-<div class="projects_main">
-  <a href="/projects/new"><h3>Create Project</h3></a>
-  <a href="/volunteers"><h3>View volunteers.</h3></a>
-</div>
 
 
 <h3>Current Projects:</h3>
-<% if @projects %>
-  <ul>
-    <% @projects.each do |project| %>
-      <li><a href="/projects/<%= project.id %>"><%= project.title %></a></li>
-    <% end %>
-  </ul>
+<% if @projects.any? %>
+<ul>
+  <% @projects.each do |project| %>
+  <li><a href="/projects/<%= project.id %>"><%= project.title %></a></li>
+  <% end %>
+</ul>
 <% else %>
-  <p>There are currently no projects to display.</p>
+<p>There are currently no projects to display.</p>
 <% end %>
 
 
-<form action="/projects/search" method="post">
+<form action="/projects" method="post">
   <div class="form-group">
-    <label for="name">Search Titles</label>
-    <input id="search" name="title" class="form-control" type="text">
+    <label for="title">Create New Project</label>
+    <input id="title" name="title" class="form-control" type="text">
   </div>
-  <button type="submit" class="btn">Search</button>
+  <button type="submit" class="button">Create Project!</button>
 </form>
 
 <form class="" action="/purge" method="get">

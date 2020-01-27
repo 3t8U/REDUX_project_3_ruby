@@ -7,85 +7,49 @@ require('pg')
 also_reload('lib/**/*.rb')
 require './config'
 
-DB = PG.connect(DB_PARAMS)
-# DB =PG.connect({:dbname => "volunteer_tracker"})
+# DB = PG.connect(DB_PARAMS)
+DB =PG.connect({:dbname => "volunteer_tracker"})
 
 get('/') do
   redirect to('/projects')
 end
 
-get('/purge') do
-  DB.exec("DELETE FROM projects *;")
-  # DB.exec("ALTER SEQUENCE projects_id_sequence RESTART WITH 1;")
-  DB.exec("DELETE FROM volunteers *;")
-  # DB.exec("ALTER SEQUENCE volunteers_id_sequence RESTART WITH 1;")
-  redirect to('/projects')
-end
-
-# get('/projects') do
-#   @projects = Project.all()
-#   erb(:projects)
-# end
 
 get('/projects') do
-  if params["clear"]
-    @projects = Project.clear()
-  elsif params["search_input"]
-    @projects = Project.search(params["search_input"])
-  elsif params["sort_list"]
-    @projects = Project.sort()
-
-  else
-    @projects = Project.all
-  end
+  @projects = Project.all()
   erb(:projects)
-end
-
-get('/volunteers') do
-  @volunteers = Volunteer.all()
-  erb(:volunteers)
 end
 
 get ('/projects/new') do
   erb(:new_project)
 end
 
-get ('/volunteers/new') do
-  erb(:new_volunteer)
-end
+
+# get('/volunteers') do
+#   @volunteers = Volunteer.all()
+#   erb(:volunteers)
+# end
+#
+#
+# get ('/volunteers/new') do
+#   erb(:new_volunteer)
+# end
 
 post ('/projects') do
-  title = params[:project_title]
-  volunteer = params[:volunteer]
+  title = params[:title]
   project = Project.new({:title => title, :id => nil})
   project.save()
-
   redirect to('/projects')
   end
 
 
-
-# post('/projects') do         ####**********>>>>>
-#   title = params[:project_title]
-#   project = Project.new(:title => title, :id => nil)
-#   project.save()
-#   @projects = Project.all()
-#   erb(:projects)
+# post ('/volunteers') do
+#   name = params[:volunteer_name]
+#   volunteer = Volunteer.new({:name => name, :id => nil})
+#   volunteer.save()
+#   redirect to('/volunteers')
 # end
 
-post ('/volunteers') do
-  name = params[:volunteer_name]
-  volunteer = Volunteer.new({:name => name, :id => nil})
-  volunteer.save()
-  redirect to('/volunteers')
-end
-
-# post('/projects/search') do   #######*******
-#   title = params[:title]
-#   @query = "#{(title != '') ? ('Name: ' + title) : ? (((title != '') ? ', ' : '') ''}"
-#   @projects = Project.search({:title => title})
-#   erb(:search)
-# end
 
 get ('/projects/:id') do
   @project = Project.find(params[:id].to_i())
@@ -138,41 +102,54 @@ patch ('/volunteers/:id') do
   redirect to("/volunteers/#{params[:id]}")
 end
 
+patch('/projects/:id') do
+  @project  = Project.find(params[:id].to_i())
+  @project.update(params)
+  @projects = Project.all
+  redirect to('/projects')
+end
+
 delete ('/projects/:id') do
   @project = Project.find(params[:id].to_i())
   @project.delete()
   redirect to('/projects')
 end
 
-delete ('/volunteers/:id') do
-  @volunteer = Volunteer.find(params[:id].to_i())
+delete ('/projects/:id/volunteers/:volunteer_id') do
+  @volunteer = Volunteer.find(params[:volunteer_id].to_i())
   @volunteer.delete()
-  redirect to('/volunteers')
-end
-
-patch('/projects/:id') do
-@project  = Project.find(params[:id].to_i())
-@project.update(params)
-@projects = Project.all
-erb(:projects)
-end
-
-     post('/projects/:id/volunteers') do   ######******>
   @project = Project.find(params[:id].to_i())
-  params[:project_id] = params[:id]
-  volunteer = Volunteer.new(params)
-  volunteer.save()
-  erb(:project)
+  redirect to('/project')
+end
+
+get ('/projects/:id/volunteers/:volunteer_id') do ####====>
+  @volunteer = Volunteer.find(params[:volunteer_id].to_i())
+  erb(:volunteer)
+end
+
+post('/projects/:id/volunteers') do   ######******>
+@project = Project.find(params[:id].to_i())
+# params[:project_id] = params[:id]
+volunteer = Volunteer.new({:name => params[:volunteer_name], :project_id => @project_id, :id => nil })
+volunteer.save()
+erb(:project)
 end
 
 # Edit a volunteer and then route back to the project view.
-        patch('/projects/:id/volunteers/:volunteer_id') do ######******>
-  @project = Project.find(params[:id].to_i())
-  volunteer = Volunteer.find(params[:volunteer_id].to_i())
-  volunteer.update(params[:name], @project.id)
-  erb(:project)
+patch('/projects/:id/volunteers/:volunteer_id') do ######******>
+@project = Project.find(params[:id].to_i())
+volunteer = Volunteer.find(params[:volunteer_id].to_i())
+volunteer.update(params[:name], @project.id)
+erb(:project)
 end
 
+get('/purge') do
+  DB.exec("DELETE FROM projects *;")
+  # DB.exec("ALTER SEQUENCE projects_id_sequence RESTART WITH 1;")
+  DB.exec("DELETE FROM volunteers *;")
+  # DB.exec("ALTER SEQUENCE volunteers_id_sequence RESTART WITH 1;")
+  redirect to('/projects')
+end
 
 # patch('/') do
 # end
