@@ -4,11 +4,11 @@
 
 <form action="/volunteers/<%= @volunteer.id() %>" method="post">
   <input name="_method" type="hidden" value="patch">
-
+  <input type="hidden" name="project_id" value="<%= @volunteer.project_id %>" />
   <label for="name">Rename Volunteer</label>
   <input id="name" name="name" type="text" placeholder="<%= @volunteer.name %>">
-  <label for="project_name">Add project</label>
-  <input id="project_title" name="project_title" type="text">
+  <!-- <label for="project_name">Add project</label>
+  <input id="project_title" name="project_title" type="text"> -->
   <button type="submit">Update</button>
 </form>
 

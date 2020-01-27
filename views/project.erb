@@ -4,11 +4,7 @@
 <h3>Volunteers:</h3>
 <% volunteers = @project.volunteers %>
 <% if volunteers %>
-  <ul>
-    <% volunteers.each do |volunteer| %>
-      <li><a href="/volunteers/<%= volunteer.id %>"><h3><%= volunteer.title %></h3></a></li>
-    <% end %>
-  </ul>
+  <a href="/volunteers/<%= volunteers.id %>"><h3><%= volunteers.name %></h3></a>
 <% else %>
   <p>We need <em>YOU</em> to volunteer!!!!!</p>
 <% end %>

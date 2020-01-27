@@ -5,23 +5,25 @@ class Project
   def initialize(attributes)
     @title = attributes.fetch(:title)
     @id = attributes.fetch(:id)
+    @volunteer_name
   end
 
 
-  def save
+  def save()
     result = DB.exec("INSERT INTO projects (title) VALUES ('#{@title}') RETURNING id;")
     @id = result.first().fetch("id").to_i
+    DB.exec("INSERT INTO volunteers (name, project_id) VALUES ('#{@volunteer_name}', #{@id})")
   end
 
-  def update(attributes)
-    attributes = attributes.reduce({}) do |acc, (key, val)|
-      acc[key.to_sym] = (val == '') ? nil : val
-      acc
-    end
-    @title = attributes.fetch(:title) || @title
-    DB.exec("UPDATE projects SET title = '#{@title}' WHERE id = #{@id};")
-
-  end
+  # def update(attributes)
+  #   attributes = attributes.reduce({}) do |acc, (key, val)|
+  #     acc[key.to_sym] = (val == '') ? nil : val
+  #     acc
+  #   end
+  #   @title = attributes.fetch(:title) || @title
+  #   DB.exec("UPDATE projects SET title = '#{@title}' WHERE id = #{@id};")
+  #
+  # end
   # def update(attributes)
   #     @title = (attributes.fetch(:title) && attributes.fetch(:title) != '') ?
   #       attributes.fetch(:title) :
@@ -30,10 +32,12 @@ class Project
   #       UPDATE projects SET title = '#{Project.(@title)}' WHERE id = #{@id};")
   #   end
   #
-  # def update(title)
-  #   @title = title
-  #   DB.exec("UPDATE projects SET title = '#{@title}' WHERE id = #{@id};")
-  # end
+  def update(params)
+    @title = params[:title]
+    @volunteer_name = params[:volunteer_name]
+    DB.exec("UPDATE projects SET title = '#{@title}' WHERE id = #{@id};")
+    DB.exec("UPDATE volunteers SET name = '#{@volunteer_name}' WHERE project_id = #{@id};")
+  end
 
 
   def ==(project_to_compare)
@@ -49,7 +53,7 @@ class Project
   end
 
   def self.find(id)
-    project = DB.exec("SELECT * FROM projects WHERE id = #{id};").first
+    project = DB.exec("SELECT * FROM projects WHERE id = #{id};")
     title = project.fetch("title")
     id = project.fetch("id").to_i
     Project.new({:title => title, :id => id,})
@@ -59,8 +63,6 @@ class Project
     DB.exec("DELETE FROM projects WHERE id = #{@id};")
     DB.exec("DELETE FROM volunteers WHERE project_id = #{@id};")
   end
-
-
 
   def self.sort
     self.get_projects("SELECT * FROM projects ORDER BY lower(name);")
@@ -73,7 +75,7 @@ class Project
   end
 
   def volunteers                         #find volunteers by project
-    Volunteer.find_by_project(self.id)
+    Volunteer.find_by_project(self.id)[0]
   end
 
   def self.get_projects(db_query)

@@ -57,12 +57,20 @@ end
 post ('/projects') do
   title = params[:project_title]
   volunteer = params[:volunteer]
-  project = Project.new({:title => title, :id => nil})
-  project.save()
+  project = Project.new({:title => title, :id => nil, :volunteer_name => volunteer})
+  project.save(volunteer)
 
   redirect to('/projects')
   end
 
+patch ('/projects/:id') do
+  project = Project.find(params[:id])
+  project = project.update({
+    :title => params[:title],
+    :volunteer_name => params[:volunteer_name]
+  })
+  redirect to('/projects')
+  end
 
 
 # post('/projects') do         ####**********>>>>>
@@ -124,17 +132,7 @@ end
 
 patch ('/volunteers/:id') do
   @volunteer = Volunteer.find(params[:id].to_i())
-  @volunteer.update({:name => params[:name]})
-  new_project = params[:project_name]
-  if (new_project != "")
-    project = Project.new({
-      :id => nil,
-      :name => "#{new_project}",
-      :genre => "TBD"
-    })
-    project.save()
-    @volunteer.add_project(project.name)
-  end
+  @volunteer.update(params[:name], params[:project_id])
   redirect to("/volunteers/#{params[:id]}")
 end
 
@@ -153,6 +151,7 @@ end
 patch('/projects/:id') do
 @project  = Project.find(params[:id].to_i())
 @project.update(params)
+# binding.pry (params)
 @projects = Project.all
 erb(:projects)
 end
