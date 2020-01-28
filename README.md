@@ -1,28 +1,21 @@
-# _¡WORD UP!_
+# _¡P's & Vs!_
 
-#### _This is an application that stores words and their definitions_
+#### _This is an application that store volunteer & project data_
 
 #### By _**Nate Powers**_
 
 ## Description
 
-_This application allows the user to create, read, update & delete words, definitions and pronunciation details_
+_This application allows the user to create, read, update & delete projects and their associated volunteers_
 
 _https://3t8u.github._
 
 ##Specs
 
-* _The application allows the user to input a word_
+* _The application allows the user to create, read, update ad destroy Projects_
 
-* _The application allows the user to add a definition to the inputted word and a pronunciation key_
+* _The application allows the user to assign, read, update and destroy volunteers for projects_
 
-* _The application allows the user edit & delete words, their definitions and pronunciations_
-
-* _The application allows the user to click and sort all entries alphabetically_
-
-* _The application allows the user to search the list of words by word or definition_
-
-* _  _
 
 
 
@@ -32,10 +25,14 @@ _https://3t8u.github._
 
 ## Setup/Installation Requirements
 
-* _Open page in Heroku (https://word-upkids.herokuapp.com/)_
+* _Clone repository from git hub_
 
+* _From terminal run  "Bundle Install"_
 
-__
+* _From terminal run  "rake db:create"_
+
+* _From terminal run  "ruby app.rb" and open your web browser to Localhost:4567_
+
 
 ## Known Bugs
 
@@ -72,4 +69,4 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.*
 
-Copyright (c) 2019 **_Nate Powers_**
+Copyright (c) 2020 **_Nate Powers_**
